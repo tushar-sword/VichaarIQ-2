@@ -1,0 +1,21 @@
+{
+  "name": "@vichaar/agents",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@openai/agents": "^0.17.2",
+    "@vichaar/shared": "0.2.0",
+    "zod": "^4.0.0"
+  }
+}

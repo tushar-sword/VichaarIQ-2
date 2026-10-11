@@ -1,0 +1,20 @@
+services:
+  app-postgres:
+    image: postgres:16-alpine
+    container_name: vichaar-iq-app-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vichaar
+      POSTGRES_PASSWORD: vichaar_dev_password
+      POSTGRES_DB: vichaar_iq
+    ports:
+      - "5433:5432"
+    volumes:
+      - vichaar_iq_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vichaar -d vichaar_iq"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  vichaar_iq_pgdata:
