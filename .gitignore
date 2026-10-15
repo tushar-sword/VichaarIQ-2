@@ -1,6 +1,40 @@
 node_modules
 .next
 dist
+# Private environment files at every workspace depth; publish only reviewed templates.
 .env
+.env.*
+*.env
+*.env.*
+!/.env.example
+!/tests/postgres/local.env.example
+
+# Local credentials and private keys.
+.npmrc
+.netrc
+.aws/
+.ssh/
+secrets/
+credentials*.json
+service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Generated output and local database exports (keep SQL initialization sources).
+*.tsbuildinfo
+coverage/
+*.dump
+*.backup
+*.sql.gz
+*.sqlite
+*.sqlite3
+*.db
+/pgdata/
+/postgres-data/
+/backups/
 *.log
 .DS_Store
+.test-db/
+.recovery-checkpoints/

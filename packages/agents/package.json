@@ -11,11 +11,14 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run src"
   },
   "dependencies": {
     "@openai/agents": "^0.17.2",
     "@vichaar/shared": "0.2.0",
+    "@vichaar/validation": "0.2.0",
+    "pgsql-ast-parser": "^12.0.2",
     "zod": "^4.0.0"
   }
 }

@@ -1,0 +1,32 @@
+# LOCAL DEVELOPMENT ONLY. This is a separate disposable cluster, never metadata.
+name: vichaar-iq-ecommerce-test
+services:
+  ecommerce-postgres:
+    image: postgres:16-alpine
+    container_name: vichaar-iq-ecommerce-test-postgres
+    restart: "no"
+    environment:
+      # Public sample credentials. Never reuse these outside local development.
+      POSTGRES_USER: vichaar_test_admin
+      POSTGRES_PASSWORD: local_test_admin_only
+      POSTGRES_DB: vichaar_ecommerce_test
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - "127.0.0.1:5544:5432"
+    volumes:
+      - ecommerce-test-pgdata:/var/lib/postgresql/data
+      - ./tests/postgres/init:/docker-entrypoint-initdb.d:ro
+    labels:
+      io.vichaariq.purpose: local-ecommerce-test
+    healthcheck:
+      # TCP is unavailable during the entrypoint's temporary initialization server.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U vichaar_test_admin -d vichaar_ecommerce_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 45
+      start_period: 5s
+volumes:
+  ecommerce-test-pgdata:
+    name: vichaar_iq_ecommerce_test_pgdata
+    labels:
+      io.vichaariq.purpose: local-ecommerce-test

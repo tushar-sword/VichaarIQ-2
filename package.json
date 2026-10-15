@@ -2,14 +2,36 @@
   "name": "vichaar-iq",
   "private": true,
   "version": "0.2.0",
-  "workspaces": ["apps/*", "services/*", "packages/*"],
-  "engines": {"node": ">=22"},
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "dev": "npm run build -w @vichaar/shared && npm run build -w @vichaar/agents && concurrently -k -n web,api \"npm run dev -w @vichaar/web\" \"npm run dev -w @vichaar/api\"",
-    "build": "npm run build -w @vichaar/shared && npm run build -w @vichaar/agents && npm run build -w @vichaar/database && npm run build -w @vichaar/validation && npm run build -w @vichaar/api && npm run build -w @vichaar/web",
-    "typecheck": "npm run build -w @vichaar/shared && npm run build -w @vichaar/agents && npm run typecheck --workspaces --if-present",
+    "build:packages": "npm run build -w @vichaar/shared && npm run build -w @vichaar/validation && npm run build -w @vichaar/database && npm run build -w @vichaar/agents",
+    "dev": "npm run build:packages && concurrently -k -n web,api \"npm run dev -w @vichaar/web\" \"npm run dev -w @vichaar/api\"",
+    "build": "npm run build:packages && npm run build -w @vichaar/api && npm run build -w @vichaar/web",
+    "typecheck": "npm run build:packages && npm run typecheck --workspaces --if-present && tsc -p tests/postgres/tsconfig.ai.json",
+    "test": "npm run build:packages && npm run test --workspaces --if-present && npm run test:db-safety",
+    "test:db-safety": "node --test tests/postgres/safety.test.mjs",
+    "test-db": "npm run test-db:status",
+    "test-db:up": "node scripts/test-db.mjs up",
+    "test-db:verify": "npm run build:packages && node scripts/test-db.mjs verify",
+    "test-db:safety": "npm run build:packages && npm run build -w @vichaar/api && node scripts/test-db.mjs safety",
+    "test-db:ai": "npm run build:packages && npm run build -w @vichaar/api && node scripts/test-db.mjs ai",
+    "test-db:down": "node scripts/test-db.mjs down",
+    "test-db:purge": "node scripts/test-db.mjs purge --delete-test-volume",
+    "test-db:status": "node scripts/test-db.mjs status",
+    "test-db:logs": "node scripts/test-db.mjs logs",
     "docker:up": "docker compose up -d app-postgres",
     "docker:down": "docker compose stop app-postgres"
   },
-  "devDependencies": {"concurrently": "^9.1.2", "typescript": "^5.8.3"}
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "^5.8.3",
+    "vitest": "^5.0.3"
+  }
 }
